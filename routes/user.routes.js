@@ -15,7 +15,7 @@ router.get("/"); // badmne current logged in user return
 router.post("/signup", async (req, res) => {
 	const { name, email, password } = req.body;
 
-	const existingUser = await db
+	const [existingUser] = await db
 		.select({
 			email: usersTable.email,
 		})
