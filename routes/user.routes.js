@@ -1,10 +1,10 @@
 import express from "express";
-import db from "../db";
-import { usersTable } from "../db/schema";
+import db from "../db/index.js";
+import { usersTable } from "../db/schema.js";
 import { eq } from "drizzle-orm";
 import { randomBytes, createHmac } from "node:crypto";
 
-const router = express.router();
+const router = express.Router();
 
 /* -------------------------------------------------------------------------- */
 
