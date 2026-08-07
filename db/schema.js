@@ -1,3 +1,4 @@
+import { timestamp } from "drizzle-orm/cockroach-core";
 import { uuid, pgTable, varchar, text } from "drizzle-orm/pg-core";
 
 export const usersTable = pgTable("users", {
@@ -6,4 +7,12 @@ export const usersTable = pgTable("users", {
 	email: varchar({ length: 255 }).notNull().unique(),
 	password: text().notNull(),
 	salt: text().notNull(),
+});
+
+export const userSessions = pgTable("user_sessions", {
+	id: uuid().primaryKey().defaultRandom(),
+	userId: uuid()
+		.references(() => usersTable.id)
+		.notNull(),
+	createdAt: timestamp().defaultNow().notNull(),
 });
