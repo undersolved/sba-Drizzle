@@ -3,6 +3,7 @@ import db from "../db/index.js";
 import { usersTable, userSessions } from "../db/schema.js";
 import { eq } from "drizzle-orm";
 import { randomBytes, createHmac } from "node:crypto";
+import jwt from "jsonwebtoken";
 
 const router = express.Router();
 
@@ -88,14 +89,15 @@ router.post("/login", async (req, res) => {
 		return res.status(400).json({ error: "Incorrect Passsword" });
 	}
 
-	const [session] = await db
-		.insert(userSessions)
-		.values({
-			userId: existingUser.id,
-		})
-		.returning({ id: userSessions.id });
+	const payload = {
+		id: existingUser.id,
+		email: existingUser.email,
+		name: existingUser.name,
+	};
 
-	return res.json({ status: "success", sessionId: session.id });
+	const token = jwt.sign(payload, process.env.JWT_SECRET);
+
+	return res.json({ status: "success", token });
 });
 
 /* -------------------------------------------------------------------------- */
